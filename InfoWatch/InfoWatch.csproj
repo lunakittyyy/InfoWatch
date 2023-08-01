@@ -27,6 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>$(BepInExAssemblyPath)\0Harmony.dll</HintPath>
     </Reference>

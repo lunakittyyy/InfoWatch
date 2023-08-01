@@ -4,6 +4,6 @@
     {
         public const string GUID = "luna.infowatch";
         public const string Name = "InfoWatch";
-        public const string Version = "1.1.0";
+        public const string Version = "1.2.0";
     }
 }
