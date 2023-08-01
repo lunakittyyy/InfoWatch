@@ -21,7 +21,6 @@ namespace InfoWatch.Scripts
         public void PageUp()
         {
             if (CurrentPage + 1 > Pages || (LastPageSwitch + 0.3) >= Time.time) return;
-            UnityEngine.Debug.Log("Incrementing page");
             Plugin.instance.watch.SetImage(null, DummyWatch.ImageType.Hat);
             Plugin.instance.watch.SetImage(null, DummyWatch.ImageType.Badge);
             Plugin.instance.watch.SetImage(null, DummyWatch.ImageType.Face);
@@ -38,7 +37,6 @@ namespace InfoWatch.Scripts
         public void PageDown()
         {
             if (CurrentPage - 1 < 0 || (LastPageSwitch + 0.3) >= Time.time) return;
-            UnityEngine.Debug.Log("Decrementing page");
             Plugin.instance.watch.SetImage(null, DummyWatch.ImageType.Hat);
             Plugin.instance.watch.SetImage(null, DummyWatch.ImageType.Badge);
             Plugin.instance.watch.SetImage(null, DummyWatch.ImageType.Face);

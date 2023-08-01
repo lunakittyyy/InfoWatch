@@ -46,7 +46,6 @@ namespace InfoWatch.Main
         {
 
             // streams
-            UnityEngine.Debug.Log("Creating streams");
             Stream speakerstr = Assembly.GetExecutingAssembly().GetManifestResourceStream("InfoWatch.Resources.speaker.png");
             Stream pingbar1 = Assembly.GetExecutingAssembly().GetManifestResourceStream("InfoWatch.Resources.pingbar1.png");
             Stream pingbar2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("InfoWatch.Resources.pingbar2.png");
@@ -56,7 +55,6 @@ namespace InfoWatch.Main
             Stream usw = Assembly.GetExecutingAssembly().GetManifestResourceStream("InfoWatch.Resources.usw.png");
             Stream eu = Assembly.GetExecutingAssembly().GetManifestResourceStream("InfoWatch.Resources.eu.png");
             // byte arrays
-            UnityEngine.Debug.Log("Creating byte arrays");
             byte[] speakerBytes = new byte[speakerstr.Length];
             byte[] OneBarBytes = new byte[pingbar1.Length];
             byte[] TwoBarBytes = new byte[pingbar2.Length];
@@ -66,7 +64,6 @@ namespace InfoWatch.Main
             byte[] uswBytes = new byte[usw.Length];
             byte[] euBytes = new byte[eu.Length];
             // reading
-            UnityEngine.Debug.Log("Reading byte arrays into streams");
             await speakerstr.ReadAsync(speakerBytes, 0, speakerBytes.Length);
             await pingbar1.ReadAsync(OneBarBytes, 0, OneBarBytes.Length);
             await pingbar2.ReadAsync(TwoBarBytes, 0, TwoBarBytes.Length);
@@ -76,7 +73,6 @@ namespace InfoWatch.Main
             await usw.ReadAsync(uswBytes, 0, uswBytes.Length);
             await eu.ReadAsync(euBytes, 0, euBytes.Length);
             // sprite creation
-            UnityEngine.Debug.Log("Creating sprites");
             SpeakerSprite = SpriteTools.CreateSpriteFromByteArray(speakerBytes, "speaker", 512, 512);
             OneBarSprite = SpriteTools.CreateSpriteFromByteArray(OneBarBytes, "onebar", 8, 8);
             TwoBarSprite = SpriteTools.CreateSpriteFromByteArray(TwoBarBytes, "twobar", 8, 8);
@@ -86,7 +82,6 @@ namespace InfoWatch.Main
             uswSprite = SpriteTools.CreateSpriteFromByteArray(uswBytes, "usw", 13, 13);
             euSprite = SpriteTools.CreateSpriteFromByteArray(euBytes, "eu", 9, 9);
             // config
-            UnityEngine.Debug.Log("Reading config");
             ConfigFile customFile = new ConfigFile(Path.Combine(Paths.ConfigPath, "InfoWatch.cfg"), true);
             TwentyFourHr = customFile.Bind("Time", "24-Hour Time", false, "Use 24-hour time instead of 12.");
 
@@ -188,7 +183,6 @@ namespace InfoWatch.Main
 
         void PageChange(object sender, EventArgs e)
         {
-            UnityEngine.Debug.Log("page change event");
             switch (pageManager.CurrentPage)
             {
                 case 0:
@@ -199,7 +193,6 @@ namespace InfoWatch.Main
 
         async void WatchCreate()
         {
-            UnityEngine.Debug.Log("Creating watch");
             watch = await DummyWatch.CreateDummyWatch(Assembly.GetExecutingAssembly(), GorillaTagger.Instance.offlineVRRig);
             watch.SetImage(null, DummyWatch.ImageType.Hat);
             watch.SetImage(null, DummyWatch.ImageType.Badge);
@@ -212,7 +205,6 @@ namespace InfoWatch.Main
 
         void WatchDestroy()
         {
-            UnityEngine.Debug.Log("Destroying watch");
             DummyWatch.RemoveDummyWatch(Assembly.GetExecutingAssembly(), GorillaTagger.Instance.offlineVRRig);
             WatchActive = false;
         }
