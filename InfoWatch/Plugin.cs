@@ -25,9 +25,11 @@ namespace InfoWatch.Main
         public DummyWatch watch;
         string TempText;
         ConfigEntry<bool> TwentyFourHr;
-        PageManager pageManager;
+        public PageManager pageManager;
         TimeSpan playTime;
         bool InitDone = false;
+        GameObject leftButton;
+        GameObject rightButton;
 
         // network stuff
         Recorder VoiceRecorder;
@@ -115,8 +117,6 @@ namespace InfoWatch.Main
         {
             if (WatchActive && InitDone)
             {
-                if (InputUtils.LeftAnalogStick.x > 0.75) pageManager.PageUp();
-                if (InputUtils.LeftAnalogStick.x < -0.75) pageManager.PageDown();
                 switch (pageManager.CurrentPage)
                 {
                     case 0:
@@ -170,7 +170,7 @@ namespace InfoWatch.Main
                         watch.SetWatchText(TempText);
                         return;
                     case 1:
-                        TempText = "PLACEHOLDER";
+                        TempText = $"FPS:{1.0f / Time.deltaTime}";
                         watch.SetWatchText(TempText);
                         return;
                     case 2:
@@ -194,6 +194,26 @@ namespace InfoWatch.Main
         async void WatchCreate()
         {
             watch = await DummyWatch.CreateDummyWatch(Assembly.GetExecutingAssembly(), GorillaTagger.Instance.offlineVRRig);
+            
+            leftButton = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            Destroy(leftButton.GetComponent<BoxCollider>());
+            leftButton.transform.SetParent(watch.gameObject.transform, false);
+            leftButton.transform.localPosition = new Vector3(-0.31f, 0.01f, 0.857f);
+            leftButton.transform.Rotate(0f, 15f, 0f);
+            leftButton.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+            leftButton.AddComponent<WatchButton>().onPressed += LeftPress;
+            leftButton.GetComponent<WatchButton>().onPressButton = new UnityEngine.Events.UnityEvent();
+
+            rightButton = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            Destroy(rightButton.GetComponent<BoxCollider>());
+            rightButton.transform.SetParent(watch.gameObject.transform, false);
+            rightButton.transform.SetParent(watch.gameObject.transform, false);
+            rightButton.transform.localPosition = new Vector3(-0.33f, 0.01f, 0.779f);
+            rightButton.transform.Rotate(0f, 15f, 0f);
+            rightButton.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+            rightButton.AddComponent<WatchButton>().onPressed += RightPress;
+            rightButton.GetComponent<WatchButton>().onPressButton = new UnityEngine.Events.UnityEvent();
+
             watch.SetImage(null, DummyWatch.ImageType.Hat);
             watch.SetImage(null, DummyWatch.ImageType.Badge);
             watch.SetImage(null, DummyWatch.ImageType.Face);
@@ -205,9 +225,15 @@ namespace InfoWatch.Main
 
         void WatchDestroy()
         {
+            Destroy(leftButton);
+            Destroy(rightButton);
             DummyWatch.RemoveDummyWatch(Assembly.GetExecutingAssembly(), GorillaTagger.Instance.offlineVRRig);
             WatchActive = false;
         }
+
+        public void LeftPress() { pageManager.PageDown(); }
+
+        public void RightPress() { pageManager.PageUp(); }
 
         void RegionEval()
         {
