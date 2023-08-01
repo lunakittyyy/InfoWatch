@@ -101,7 +101,8 @@ namespace InfoWatch.Main
             if (e.Gamemode.Contains("HUNT") && WatchActive) { WatchDestroy(); }
             else if (!WatchActive) { WatchCreate(); }
             VoiceRecorder = PhotonNetworkController.Instance.GetComponent<Recorder>();
-            RegionEval();
+            if (pageManager.CurrentPage == 0) { RegionEval(); }
+            
         }
 
         void RoomLeft(object sender, EventArgs e)
@@ -170,7 +171,7 @@ namespace InfoWatch.Main
                         watch.SetWatchText(TempText);
                         return;
                     case 1:
-                        TempText = $"FPS:{1.0f / Time.deltaTime}";
+                        TempText = $"FPS:{Math.Round(1.0f / Time.unscaledDeltaTime)}";
                         watch.SetWatchText(TempText);
                         return;
                     case 2:
@@ -196,7 +197,8 @@ namespace InfoWatch.Main
             watch = await DummyWatch.CreateDummyWatch(Assembly.GetExecutingAssembly(), GorillaTagger.Instance.offlineVRRig);
             
             leftButton = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            Destroy(leftButton.GetComponent<BoxCollider>());
+            leftButton.layer = LayerMask.NameToLayer("GorillaInteractable");
+            leftButton.GetComponent<BoxCollider>().isTrigger = true;
             leftButton.transform.SetParent(watch.gameObject.transform, false);
             leftButton.transform.localPosition = new Vector3(-0.31f, 0.01f, 0.857f);
             leftButton.transform.Rotate(0f, 15f, 0f);
@@ -205,7 +207,8 @@ namespace InfoWatch.Main
             leftButton.GetComponent<WatchButton>().onPressButton = new UnityEngine.Events.UnityEvent();
 
             rightButton = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            Destroy(rightButton.GetComponent<BoxCollider>());
+            rightButton.layer = LayerMask.NameToLayer("GorillaInteractable");
+            rightButton.GetComponent<BoxCollider>().isTrigger = true;
             rightButton.transform.SetParent(watch.gameObject.transform, false);
             rightButton.transform.SetParent(watch.gameObject.transform, false);
             rightButton.transform.localPosition = new Vector3(-0.33f, 0.01f, 0.779f);
@@ -237,17 +240,20 @@ namespace InfoWatch.Main
 
         void RegionEval()
         {
-            switch (PhotonNetwork.CloudRegion.Replace("/*", "").ToUpper())
+            if (PhotonNetwork.InRoom)
             {
-                case "US":
-                    watch.SetImage(usSprite, DummyWatch.ImageType.RightHand);
-                    return;
-                case "USW":
-                    watch.SetImage(uswSprite, DummyWatch.ImageType.RightHand);
-                    return;
-                case "EU":
-                    watch.SetImage(euSprite, DummyWatch.ImageType.RightHand);
-                    return;
+                switch (PhotonNetwork.CloudRegion.Replace("/*", "").ToUpper())
+                {
+                    case "US":
+                        watch.SetImage(usSprite, DummyWatch.ImageType.RightHand);
+                        return;
+                    case "USW":
+                        watch.SetImage(uswSprite, DummyWatch.ImageType.RightHand);
+                        return;
+                    case "EU":
+                        watch.SetImage(euSprite, DummyWatch.ImageType.RightHand);
+                        return;
+                }
             }
         }
     }
