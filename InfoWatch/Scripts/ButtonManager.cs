@@ -7,9 +7,10 @@ namespace InfoWatch.Scripts
     {
         public Action onPressed;
 
-        public override void ButtonActivation()
+        public override void ButtonActivationWithHand(bool isLeftHand)
         {
-            base.ButtonActivation();
+            base.ButtonActivationWithHand(isLeftHand);
+            if (isLeftHand) return;
             onPressed();
         }
     }

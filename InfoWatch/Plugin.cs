@@ -101,7 +101,7 @@ namespace InfoWatch.Main
             if (e.Gamemode.Contains("HUNT") && WatchActive) { WatchDestroy(); }
             else if (!WatchActive) { WatchCreate(); }
             VoiceRecorder = PhotonNetworkController.Instance.GetComponent<Recorder>();
-            if (pageManager.CurrentPage == 0) { RegionEval(); }
+            if (pageManager.CurrentPage == 1) { RegionEval(); }
             
         }
 
@@ -134,10 +134,13 @@ namespace InfoWatch.Main
                                 $"{DateTime.Now:h:mmtt}\n" +
                                 $"SESSION:{new TimeSpanRounder.RoundedTimeSpan(playTime.Ticks, 0).ToString().Substring(0, 5)}";
                         }
-
-
+                        watch.SetWatchText(TempText);
+                        return;
+                    case 1:
                         if (PhotonNetwork.InRoom)
                         {
+                            TempText = "";
+                            if (PhotonNetwork.CurrentRoom.IsVisible) TempText = $"ROOM:{PhotonNetwork.CurrentRoom.Name}";
                             if (GorillaGameManager.instance is GorillaTagManager tag && tag.currentInfected.Count > 0)
                             {
                                 TempText += $"\n{tag.currentInfected.Count}/{PhotonNetwork.PlayerList.Length} TAGGED";
@@ -168,14 +171,19 @@ namespace InfoWatch.Main
                                 watch.SetImage(OneBarSprite, DummyWatch.ImageType.LeftHand);
                             }
                         }
-                        watch.SetWatchText(TempText);
-                        return;
-                    case 1:
-                        TempText = $"FPS:{Math.Round(1.0f / Time.unscaledDeltaTime)}";
+                        else TempText = $"NOT IN A ROOM!";
                         watch.SetWatchText(TempText);
                         return;
                     case 2:
-                        TempText = "come up with\nanother idea bro";
+                        TempText = $"FPS:{Math.Round(1.0f / Time.unscaledDeltaTime)}";
+                        watch.SetWatchText(TempText);
+                        return;
+                    case 3:
+                        TempText = 
+                            $"CREDITS\n" +
+                            $"DEV:BUTTONS,\n" +
+                            $"OTHER STUFF\n" +
+                            $"ILY! <3";
                         watch.SetWatchText(TempText);
                         return;
                 }
@@ -184,9 +192,11 @@ namespace InfoWatch.Main
 
         void PageChange(object sender, EventArgs e)
         {
+            // We will most likely need another page that uses infrequently updated icons
+            // so this is a switch as to make it easier in the future.
             switch (pageManager.CurrentPage)
             {
-                case 0:
+                case 1:
                     RegionEval();
                     return;
             }

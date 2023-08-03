@@ -10,7 +10,7 @@ namespace InfoWatch.Scripts
         // Is this a bad way to do a page system?
 
         public event EventHandler PageChange;
-        readonly int Pages = 2;
+        readonly int Pages = 3;
         public int CurrentPage = 0;
 
         /// <summary>
