@@ -14,7 +14,7 @@ namespace InfoWatch.Scripts
         public int CurrentPage = 0;
 
         /// <summary>
-        /// Increments the page. Does nothing if attempting to go to a nonexistant page or if the page was changed too recently.
+        /// Increments the page. Does nothing if attempting to go to a nonexistent page.
         /// </summary>
         public void PageUp()
         {
@@ -29,7 +29,7 @@ namespace InfoWatch.Scripts
             PageChange?.Invoke(this, EventArgs.Empty);
         }
         /// <summary>
-        /// Decrements the page. Does nothing if attempting to go to a nonexistant page or if the page was changed too recently.
+        /// Decrements the page. Does nothing if attempting to go to a nonexistent page.
         /// </summary>
         public void PageDown()
         {

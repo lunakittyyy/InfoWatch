@@ -7,6 +7,9 @@ namespace InfoWatch.Scripts
 {
     internal class SpriteTools
     {
+        // This tool is made specifically for this project and isn't super flexible.
+        // Use with caution if you want it in your own projects
+        
         /// <summary>
         /// Make a sprite from a byte array
         /// </summary>

@@ -4,6 +4,7 @@ using System.Text;
 
 namespace InfoWatch.Scripts
 {
+    // https://stackoverflow.com/questions/338658/can-you-round-a-net-timespan-object
     internal class TimeSpanRounder
     {
         public struct RoundedTimeSpan

@@ -8,10 +8,10 @@ using BepInEx.Configuration;
 using Utilla;
 using DevGorillaLib.Objects;
 using InfoWatch.Scripts;
+using DevGorillaLib.Utils;
 using Photon.Pun;
 using Photon.Voice.Unity;
 using GorillaNetworking;
-using DevGorillaLib.Utils;
 
 namespace InfoWatch.Main
 {
@@ -27,6 +27,7 @@ namespace InfoWatch.Main
         ConfigEntry<bool> TwentyFourHr;
         public PageManager pageManager;
         TimeSpan playTime;
+        // Do we even need this?
         bool InitDone = false;
         GameObject leftButton;
         GameObject rightButton;
@@ -46,6 +47,8 @@ namespace InfoWatch.Main
         
         async void Start()
         {
+            // TODO: Maybe we should use an assetbundle instead?
+            // This is a LOT of code for 7 sprites... we could do better
 
             // streams
             Stream speakerstr = Assembly.GetExecutingAssembly().GetManifestResourceStream("InfoWatch.Resources.speaker.png");
@@ -88,6 +91,8 @@ namespace InfoWatch.Main
             TwentyFourHr = customFile.Bind("Time", "24-Hour Time", false, "Use 24-hour time instead of 12.");
 
             pageManager = new PageManager();
+            // We need to access the watch that lives inside this class for the PageManager
+            // and public static is technically bad OOP.
             if (instance == null) instance = this;
 
             Utilla.Events.RoomJoined += RoomJoined;
@@ -96,6 +101,7 @@ namespace InfoWatch.Main
             pageManager.PageChange += PageChange;
         }
 
+        // TODO: Make sure the watch reappears as soon as you leave a Hunt lobby
         void RoomJoined(object sender, Events.RoomJoinedArgs e)
         {
             if (e.Gamemode.Contains("HUNT") && WatchActive) { WatchDestroy(); }
@@ -104,7 +110,7 @@ namespace InfoWatch.Main
             if (pageManager.CurrentPage == 1) { RegionEval(); }
             
         }
-
+        
         void RoomLeft(object sender, EventArgs e)
         {
             watch.SetImage(null, DummyWatch.ImageType.LeftHand);
@@ -139,6 +145,7 @@ namespace InfoWatch.Main
                     case 1:
                         if (PhotonNetwork.InRoom)
                         {
+                            // TODO: Make the first line display something better if you're in a private
                             TempText = "";
                             if (PhotonNetwork.CurrentRoom.IsVisible) TempText = $"ROOM:{PhotonNetwork.CurrentRoom.Name}";
                             if (GorillaGameManager.instance is GorillaTagManager tag && tag.currentInfected.Count > 0)
@@ -175,6 +182,7 @@ namespace InfoWatch.Main
                         watch.SetWatchText(TempText);
                         return;
                     case 2:
+                        // TODO: Lerp or average FPS out over time so its more readable
                         TempText = $"FPS:{Math.Round(1.0f / Time.unscaledDeltaTime)}";
                         watch.SetWatchText(TempText);
                         return;
@@ -244,9 +252,9 @@ namespace InfoWatch.Main
             WatchActive = false;
         }
 
-        public void LeftPress() { pageManager.PageDown(); }
+        public void LeftPress() => pageManager.PageDown();
 
-        public void RightPress() { pageManager.PageUp(); }
+        public void RightPress() => pageManager.PageUp();
 
         void RegionEval()
         {
